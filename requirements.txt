@@ -1,0 +1,21 @@
+# Core Framework
+langchain==0.3.0
+langchain-community==0.3.0
+langchain-huggingface==0.1.0  # For local Embeddings
+langchain-chroma==0.1.4       # Optional, but I am using FAISS
+faiss-cpu==1.8.0              # Vector Store (CPU version is lighter)
+
+# Document Processing
+pypdf==4.3.1
+pdfplumber==0.11.4            # Best for table extraction
+pandas==2.2.2                 # Data manipulation
+
+# Environment & Utils
+python-dotenv==1.0.1
+numpy<2.0.0                   # Pinned to avoid compatibility issues with some ML libs
+
+# UI
+streamlit==1.38.0
+
+# Note: You must install Ollama separately on your machine (https://ollama.com)
+# No OpenAI libraries required.

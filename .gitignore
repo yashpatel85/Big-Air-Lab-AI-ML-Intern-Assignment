@@ -1,0 +1,40 @@
+Python & Environment
+
+pycache/
+*.py[cod]
+*$py.class
+.env
+.venv
+venv/
+ENV/
+env/
+
+Project Data (Local artifacts)
+
+We exclude the 'data' folder entirely because it contains:
+
+1. The raw PDF (copyright/large binary)
+
+2. The processed chunks (generated artifact)
+
+3. The FAISS index (large binary)
+
+4. Extracted images
+
+data/
+
+IDE & Editor settings
+
+.vscode/
+.idea/
+*.swp
+
+Logs & System
+
+*.log
+.DS_Store
+Thumbs.db
+
+Streamlit
+
+.streamlit/
