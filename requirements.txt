@@ -17,5 +17,7 @@ numpy<2.0.0                   # Pinned to avoid compatibility issues with some M
 # UI
 streamlit==1.38.0
 
+langchain-groq==0.1.0
+
 # Note: You must install Ollama separately on your machine (https://ollama.com)
 # No OpenAI libraries required.

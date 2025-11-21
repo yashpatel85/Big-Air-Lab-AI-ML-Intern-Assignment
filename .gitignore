@@ -8,6 +8,10 @@ pycache/
 venv/
 ENV/
 env/
+.git
+.env
+.vscode
+*.pyc
 
 Project Data (Local artifacts)
 
@@ -38,3 +42,5 @@ Thumbs.db
 Streamlit
 
 .streamlit/
+
+start.sh
