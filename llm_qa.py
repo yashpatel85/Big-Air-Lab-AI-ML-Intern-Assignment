@@ -1,5 +1,11 @@
 from typing import List, Dict, Any
 from langchain_community.chat_models import ChatOllama
+# We wrap this import in try/except so it doesn't crash locally if you didn't install groq yet
+try:
+    from langchain_groq import ChatGroq
+except ImportError:
+    ChatGroq = None
+
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
@@ -9,17 +15,33 @@ import config
 class QAEngine:
     def __init__(self):
         """
-        Initializes the RAG engine using the local Ollama instance.
+        Initializes the RAG engine.
+        Switches between Ollama (Local) and Groq (Cloud) based on config.
         """
-        print(f"🤖 Initializing QA Engine with {config.LLM_MODEL_NAME}...")
+        print(f"🤖 Initializing QA Engine in mode: {config.DEPLOYMENT_MODE}...")
         
-        # 1. Setup Local LLM (Ollama)
-        self.llm = ChatOllama(
-            model=config.LLM_MODEL_NAME,
-            base_url=config.OLLAMA_BASE_URL,
-            temperature=0.3,  # Increased slightly for more natural/friendly tone
-            keep_alive="1h"
-        )
+        # 1. Select Model Provider
+        if config.DEPLOYMENT_MODE == "local":
+            # Local Mode: Use Ollama
+            self.llm = ChatOllama(
+                model=config.LLM_MODEL_NAME,
+                base_url=config.OLLAMA_BASE_URL,
+                temperature=0.3,
+                keep_alive="1h"
+            )
+        else:
+            # Cloud Mode: Use Groq
+            if not config.GROQ_API_KEY:
+                raise ValueError("CRITICAL: DEPLOYMENT_MODE is 'cloud' but GROQ_API_KEY is missing.")
+            
+            if ChatGroq is None:
+                raise ImportError("langchain-groq is not installed. Please add it to requirements.txt")
+
+            self.llm = ChatGroq(
+                model=config.LLM_MODEL_NAME,
+                api_key=config.GROQ_API_KEY,
+                temperature=0.3
+            )
 
         # 2. Define the "Kid-Friendly" Prompt Template
         self.prompt_template = ChatPromptTemplate.from_template(
@@ -56,8 +78,7 @@ class QAEngine:
         """
         formatted_text = ""
         for doc in docs:
-            # We clean the content slightly before feeding it to the LLM
-            # to help it understand better
+            # Clean content slightly for the LLM
             content = doc.page_content.replace("### TEXT CONTENT", "").replace("### TABLES", "Table Data:")
             source = doc.metadata.get("source", "Report")
             page = doc.metadata.get("page", "?")
@@ -95,7 +116,7 @@ class QAEngine:
                 "rank": i + 1,
                 "source": doc.metadata.get("source", "Unknown"),
                 "page": doc.metadata.get("page", "Unknown"),
-                "snippet": doc.page_content  # We pass raw content; app.py will clean it
+                "snippet": doc.page_content
             })
 
         return {
@@ -107,7 +128,6 @@ class QAEngine:
 if __name__ == "__main__":
     try:
         qa = QAEngine()
-        mock_docs = [Document(page_content="Real GDP is projected to grow by 2.0% in 2024.", metadata={"page": 4})]
-        print(qa.answer_question("How much will the economy grow?", mock_docs)["answer"])
+        print("✅ QA Engine initialized successfully.")
     except Exception as e:
-        print(e)
+        print(f"❌ Error: {e}")
