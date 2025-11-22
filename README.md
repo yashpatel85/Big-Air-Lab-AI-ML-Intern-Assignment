@@ -1,5 +1,7 @@
 📘 IMF Document Intelligence: Local Multi-Modal RAG
 
+🔗 Live Deployed App: https://multi-modal-rag-system-project.streamlit.app/
+
 A professional, fully local Retrieval-Augmented Generation (RAG) system designed to analyze complex financial documents (like IMF Article IV reports) with high precision.
 
 Built for accuracy, privacy, and low-resource environments.
