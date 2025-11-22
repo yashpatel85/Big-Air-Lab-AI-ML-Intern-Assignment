@@ -25,7 +25,10 @@ We exclude the 'data' folder entirely because it contains:
 
 4. Extracted images
 
-data/
+
+data/images/
+data/raw/
+data/processed/
 
 IDE & Editor settings
 
